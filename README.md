@@ -1,7 +1,7 @@
 Purpose
 =======
 
-'''NOTE:''' This documentation is currently work-in-progress and therefore incomplete. 19-Jan-2017
+__NOTE:__ This documentation is currently work-in-progress and therefore incomplete. 19-Jan-2017
 
 Magnolia module providing several utility functionalities.
 
