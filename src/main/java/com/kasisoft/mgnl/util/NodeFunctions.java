@@ -196,4 +196,19 @@ public class NodeFunctions {
     return result;
   }
   
+  @Nonnull
+  public static Node getPageNode( @Nonnull Node currentNode ) {
+    try {
+      if( isPageNode( currentNode ) ) {
+        return currentNode;
+      } else if( currentNode.getDepth() > 0 ) {
+        return getPageNode( currentNode.getParent() );
+      } else {
+        throw new RepositoryException( "missing page node for: " + currentNode.getIdentifier() );
+      }
+    } catch( RepositoryException ex ) {
+      throw new RuntimeRepositoryException(ex);
+    }
+  }
+  
 } /* ENDCLASS */
