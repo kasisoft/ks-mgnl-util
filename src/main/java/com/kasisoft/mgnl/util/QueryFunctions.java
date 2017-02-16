@@ -15,6 +15,7 @@ import java.util.stream.*;
 
 import java.util.*;
 
+import info.magnolia.cms.security.*;
 import info.magnolia.context.*;
 import info.magnolia.jcr.*;
 
@@ -63,12 +64,12 @@ public enum QueryFunctions {
   }
   
   @Nullable
-  public Query createQuery( @Nonnull String workspace, @Nonnull String fmt, Object ... args ) {
-    return createQuery( workspace, fmt, null, args );
+  public QueryResult executeQuery( @Nonnull String workspace, @Nonnull String fmt, Object ... args ) {
+    return executeQuery( workspace, fmt, null, args );
   }
   
   @Nullable
-  public Query createQuery( @Nonnull String workspace, @Nonnull String fmt, @Nullable Consumer<Exception> handler, Object ... args ) {
+  public QueryResult executeQuery( @Nonnull String workspace, @Nonnull String fmt, @Nullable Consumer<Exception> handler, Object ... args ) {
     if( (args != null) && (args.length > 0) ) {
       fmt = String.format( fmt, args );
     }
@@ -76,7 +77,19 @@ public enum QueryFunctions {
     try {
       Session      session = MgnlContext.getJCRSession( workspace );
       QueryManager qm      = session.getWorkspace().getQueryManager();
-      return qm.createQuery( fmt, language );
+      Query        query   = qm.createQuery( fmt, language );
+      if( MgnlContext.hasInstance() ) {
+        return query.execute();
+      } else {
+        return MgnlContext.doInSystemContext( new JCRSessionOp<QueryResult>( workspace ) {
+
+          @Override
+          public QueryResult exec( Session session ) throws RepositoryException {
+            return query.execute();
+          }
+          
+        }, true );
+      }
     } catch( Exception ex ) {
       handle( ex, handler );
       return null;
@@ -105,7 +118,7 @@ public enum QueryFunctions {
   @Nonnull
   public List<Node> list( @Nonnull String workspace, @Nonnull String fmt, @Nullable Consumer<Exception> handler, Object... args ) {
     try {
-      return loadRows( createQuery( workspace, fmt, handler, args ).execute() );
+      return loadRows( executeQuery( workspace, fmt, handler, args ) );
     } catch( Exception ex ) {
       handle( ex, handler );
       return Collections.emptyList();
