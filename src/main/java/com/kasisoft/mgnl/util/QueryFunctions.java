@@ -73,22 +73,12 @@ public enum QueryFunctions {
     if( (args != null) && (args.length > 0) ) {
       fmt = String.format( fmt, args );
     }
-    log.trace( executing_query.format( name(), fmt ) );
     try {
-      Session      session = MgnlContext.getJCRSession( workspace );
-      QueryManager qm      = session.getWorkspace().getQueryManager();
-      Query        query   = qm.createQuery( fmt, language );
+      JcrExecution exec = new JcrExecution( workspace, fmt );
       if( MgnlContext.hasInstance() ) {
-        return query.execute();
+        return exec.exec();
       } else {
-        return MgnlContext.doInSystemContext( new JCRSessionOp<QueryResult>( workspace ) {
-
-          @Override
-          public QueryResult exec( Session session ) throws RepositoryException {
-            return query.execute();
-          }
-          
-        }, true );
+        return MgnlContext.doInSystemContext( exec, false );
       }
     } catch( Exception ex ) {
       handle( ex, handler );
@@ -162,5 +152,24 @@ public enum QueryFunctions {
       return Collections.emptyList();
     }
   }
+
+  private class JcrExecution extends JCRSessionOp<QueryResult> {
+    
+    private String   queryStr;
+    
+    public JcrExecution( String workspace, String query ) {
+      super( workspace );
+      queryStr = query;
+    }
+    
+    @Override
+    public QueryResult exec( Session session ) throws RepositoryException {
+      log.trace( executing_query.format( name(), queryStr ) );
+      QueryManager qm     = session.getWorkspace().getQueryManager();
+      Query        query  = qm.createQuery( queryStr, language );
+      return query.execute();
+    }
+    
+  } /* ENDCLASS */
   
 } /* ENDCLASS */
