@@ -78,7 +78,7 @@ public enum QueryFunctions {
       if( MgnlContext.hasInstance() ) {
         return exec.exec();
       } else {
-        return MgnlContext.doInSystemContext( exec, false );
+        return MgnlContext.doInSystemContext( exec, true );
       }
     } catch( Exception ex ) {
       handle( ex, handler );
