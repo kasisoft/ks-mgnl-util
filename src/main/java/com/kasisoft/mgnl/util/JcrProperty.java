@@ -1,5 +1,7 @@
 package com.kasisoft.mgnl.util;
 
+import com.kasisoft.libs.common.function.*;
+
 import javax.annotation.*;
 import javax.jcr.*;
 
@@ -14,13 +16,15 @@ import java.util.*;
  */
 public class JcrProperty<T> {
   
-  private String                        property;
-  private BiFunction<Node, String, T>   loader;
-  private T                             defaultValue;
+  private String                         property;
+  private BiFunction<Node, String, T>    loader;
+  private TriConsumer<Node, String, T>   saver;
+  private T                              defaultValue;
   
-  public JcrProperty( @Nonnull String name, @Nonnull BiFunction<Node, String, T> converter, T defValue ) {
+  public JcrProperty( @Nonnull String name, @Nonnull BiFunction<Node, String, T> converter, @Nonnull TriConsumer<Node, String, T> tosave, T defValue ) {
     property      = name;
-    loader       = converter;
+    loader        = converter;
+    saver         = tosave;
     defaultValue  = defValue;
     synchronized( LocalData.properties ) {
       LocalData.properties.put( name, this );
@@ -38,6 +42,10 @@ public class JcrProperty<T> {
       result = defaultValue;
     }
     return result;
+  }
+  
+  public void setValue( @Nonnull Node node, T value ) {
+    saver.accept( node, property, value );
   }
   
   public boolean hasValue( @Nonnull Node node, T val ) {
