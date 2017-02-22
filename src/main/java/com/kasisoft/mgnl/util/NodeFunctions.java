@@ -174,18 +174,18 @@ public class NodeFunctions {
   
   @Nullable
   public static Node getFirstContentNode( @Nullable Node node ) {
-    return getFirstNode( node, NodeTypes.ContentNode.NAME );
+    return getFirstNode( node, $ -> isNodeType( $, NodeTypes.ContentNode.NAME ) );
   }
 
   @Nullable
-  private static Node getFirstNode( @Nullable Node node, @Nonnull String nodeType ) {
+  public static Node getFirstNode( @Nullable Node node, @Nonnull Predicate<Node> test ) {
     Node result = null;
     if( node != null ) {
       try {
         NodeIterator iterator = node.getNodes();
         while( iterator.hasNext() && (result == null) ) {
           Node current = iterator.nextNode();
-          if( current.isNodeType( nodeType ) ) {
+          if( test.test( current ) ) {
             result = current;
           }
         }
@@ -209,6 +209,19 @@ public class NodeFunctions {
     } catch( RepositoryException ex ) {
       throw new RuntimeRepositoryException(ex);
     }
+  }
+
+  @Nullable
+  public static Node getNode( @Nonnull Node node, @Nonnull String relpath ) {
+    Node result = null;
+    try {
+      if( node.hasNode( relpath ) ) {
+        result = node.getNode( relpath );
+      }
+    } catch( RepositoryException ex ) {
+      throw new RuntimeRepositoryException(ex);
+    }
+    return result;
   }
   
 } /* ENDCLASS */
