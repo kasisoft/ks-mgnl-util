@@ -1,5 +1,7 @@
 package com.kasisoft.mgnl.util;
 
+import static com.kasisoft.mgnl.util.internal.Messages.*;
+
 import info.magnolia.dam.jcr.*;
 
 import info.magnolia.jcr.util.*;
@@ -204,7 +206,7 @@ public class NodeFunctions {
       } else if( currentNode.getDepth() > 0 ) {
         return getPageNode( currentNode.getParent() );
       } else {
-        throw new RepositoryException( "missing page node for: " + currentNode.getIdentifier() );
+        throw new RepositoryException( error_missing_page_node.format( currentNode.getIdentifier() ) );
       }
     } catch( RepositoryException ex ) {
       throw new RuntimeRepositoryException(ex);
