@@ -9,35 +9,37 @@ import java.util.function.*;
 
 import java.util.*;
 
+import lombok.experimental.*;
+
+import lombok.*;
+
 /**
- * A simple helper to provide an easier solution for querying jcr nodes. 
+ * A simple helper to provide an easier solution for querying jcr nodes. It's essentially representing a
+ * binding for property values.
  * 
  * @author daniel.kasmeroglu@kasisoft.net
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(of = "property")
 public class JcrProperty<T> {
   
-  private String                         property;
-  private BiFunction<Node, String, T>    loader;
-  private TriConsumer<Node, String, T>   saver;
-  private T                              defaultValue;
+  @Getter
+  String                         property;
+  
+  BiFunction<Node, String, T>    loader;
+  TriConsumer<Node, String, T>   saver;
+  T                              defaultValue;
   
   public JcrProperty( @Nonnull String name, @Nonnull BiFunction<Node, String, T> converter, @Nonnull TriConsumer<Node, String, T> tosave, T defValue ) {
     property      = name;
     loader        = converter;
     saver         = tosave;
     defaultValue  = defValue;
-    synchronized( LocalData.properties ) {
-      LocalData.properties.put( name, this );
-    }
+    LocalData.properties.put( name, this );
   }
 
-  @Nonnull
-  public String getProperty() {
-    return property;
-  }
-  
   public T getValue( @Nonnull Node node ) {
-    T      result = loader.apply( node, property );
+    T result = loader.apply( node, property );
     if( result == null ) {
       result = defaultValue;
     }
@@ -61,22 +63,17 @@ public class JcrProperty<T> {
     return $ -> hasValue( $, expected );
   }
 
-  @Override
-  public String toString() {
-    return property;
-  }
-  
   @Nullable
   public static JcrProperty valueByName( @Nullable String name ) {
-    synchronized( LocalData.properties ) {
-      return LocalData.properties.get( name );
+    JcrProperty result = null;
+    if( name != null ) {
+      result = LocalData.properties.get( name );
     }
+    return result;
   }
   
   public static JcrProperty[] values() {
-    synchronized( LocalData.properties ) {
-      return LocalData.properties.values().toArray( new JcrProperty[ LocalData.properties.size() ] );
-    }
+    return LocalData.properties.values().toArray( new JcrProperty[ LocalData.properties.size() ] );
   }
   
   private static class LocalData {
