@@ -7,6 +7,9 @@ import com.kasisoft.libs.common.i18n.*;
  */
 public class Messages {
 
+  @I18N("failed to save property '%s' with value '%s'")
+  public static I18NFormatter               error_failed_to_save_property;
+  
   @I18N("missing page node with id '%s'")
   public static I18NFormatter               error_missing_page_node;
 

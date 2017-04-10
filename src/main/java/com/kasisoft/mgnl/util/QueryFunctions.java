@@ -2,7 +2,9 @@ package com.kasisoft.mgnl.util;
 
 import static com.kasisoft.mgnl.util.internal.Messages.*;
 
-import org.slf4j.*;
+import info.magnolia.context.*;
+
+import info.magnolia.jcr.*;
 
 import javax.annotation.*;
 import javax.jcr.*;
@@ -15,13 +17,21 @@ import java.util.stream.*;
 
 import java.util.*;
 
+import lombok.extern.slf4j.*;
+
+import lombok.experimental.*;
+
+import lombok.*;
+
 import info.magnolia.cms.security.*;
-import info.magnolia.context.*;
-import info.magnolia.jcr.*;
 
 /**
+ * A simple helper allowing to process queries using different jcr languages.
+ * 
  * @author daniel.kasmeroglu@kasisoft.net
  */
+@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @SuppressWarnings("deprecation")
 public enum QueryFunctions {
     
@@ -30,16 +40,11 @@ public enum QueryFunctions {
   sql2  ( Query.JCR_SQL2 ), 
   xpath ( Query.XPATH    );
 
-  private static final Logger log = LoggerFactory.getLogger( QueryFunctions.class );
-
-  private String   language;
+  @Getter
+  String   language;
 
   QueryFunctions( String lang ) {
     language = lang;
-  }
-
-  public String getLanguage() {
-    return language;
   }
 
   public static void loggingErrorHandler( Exception ex ) {

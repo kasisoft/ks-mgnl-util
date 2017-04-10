@@ -1,20 +1,21 @@
 package com.kasisoft.mgnl.util;
 
-import info.magnolia.jcr.util.*;
+import static com.kasisoft.mgnl.util.internal.Messages.*;
 
-import org.slf4j.*;
+import info.magnolia.jcr.util.*;
 
 import javax.annotation.*;
 import javax.jcr.*;
+
+import lombok.extern.slf4j.*;
 
 /**
  * A bunch of functions allowing to load a property of a certain datatype.
  * 
  * @author daniel.kasmeroglu@kasisoft.net
  */
+@Slf4j
 public class PropertySavers {
-
-  private static final Logger log = LoggerFactory.getLogger( PropertySavers.class );
   
   public static void saveBoolean( @Nonnull Node jcr, @Nonnull String propertyName, boolean value ) {
     save( jcr, propertyName, value );
@@ -56,7 +57,7 @@ public class PropertySavers {
     try {
       PropertyUtil.setProperty( jcr, propertyName, value );
     } catch( RepositoryException ex ) {
-      log.error( "Failed to save property '{}' with value '{}'", propertyName, value, ex );
+      log.error( error_failed_to_save_property.format( propertyName, value ), ex );
     }
   }
   
