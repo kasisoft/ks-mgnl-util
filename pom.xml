@@ -76,6 +76,7 @@
     <plugin-version-maven-dependency-plugin>2.10</plugin-version-maven-dependency-plugin>
     <plugin-version-maven-jar-plugin>3.0.0</plugin-version-maven-jar-plugin>
     <plugin-version-maven-source>3.0.1</plugin-version-maven-source>
+    <plugin-version-nexus-staging>1.6.8</plugin-version-nexus-staging>
     
   </properties>
  
