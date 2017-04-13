@@ -31,7 +31,7 @@ Release
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
          <artifactId>com.kasisoft.mgnl.util</artifactId>
-         <version>0.2</version>
+         <version>0.3</version>
      </dependency>
      
      
@@ -41,7 +41,7 @@ Snapshot
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
          <artifactId>com.kasisoft.mgnl.util</artifactId>
-         <version>0.3-SNAPSHOT</version>
+         <version>0.4-SNAPSHOT</version>
      </dependency>
      
      <repositories>
