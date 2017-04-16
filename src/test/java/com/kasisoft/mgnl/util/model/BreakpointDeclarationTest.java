@@ -28,14 +28,17 @@ public class BreakpointDeclarationTest {
     assertThat( declarations[0].getKey(), is( "ss" ) );
     assertThat( declarations[0].getMaxWidth(), is( 400 ) );
     assertThat( declarations[0].getColumns(), is( 4 ) );
+    assertThat( declarations[0].toString(), is( "ss" ) );
 
     assertThat( declarations[1].getKey(), is( "ms" ) );
     assertThat( declarations[1].getMaxWidth(), is( 836 ) );
     assertThat( declarations[1].getColumns(), is( 8 ) );
+    assertThat( declarations[1].toString(), is( "ms" ) );
 
     assertThat( declarations[2].getKey(), is( "ls" ) );
     assertThat( declarations[2].getMaxWidth(), is( 1200 ) );
     assertThat( declarations[2].getColumns(), is( 12 ) );
+    assertThat( declarations[2].toString(), is( "ls" ) );
     
     assertThat( BreakpointDeclaration.DEFAULT, is( declarations[2] ) );
 

@@ -25,7 +25,6 @@ import lombok.*;
  * @author daniel.kasmeroglu@kasisoft.net
  */
 @Getter
-@ToString(of = "key")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BreakpointDeclaration implements Comparable<BreakpointDeclaration> {
 
@@ -46,6 +45,11 @@ public class BreakpointDeclaration implements Comparable<BreakpointDeclaration> 
     LocalData.byKey.put( key, this );
     LocalData.breakpoints.add( this );
     Collections.sort( LocalData.breakpoints );
+  }
+  
+  @Override
+  public String toString() {
+    return key;
   }
   
   @Override

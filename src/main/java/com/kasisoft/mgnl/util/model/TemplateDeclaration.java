@@ -26,7 +26,6 @@ import lombok.*;
  * @author daniel.kasmeroglu@kasisoft.net
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(of = "str")
 @EqualsAndHashCode(of = "id")
 @Slf4j
 public final class TemplateDeclaration implements Predicate<Node> {
@@ -154,6 +153,11 @@ public final class TemplateDeclaration implements Predicate<Node> {
       }
     }
     return result;
+  }
+  
+  @Override
+  public String toString() {
+    return str;
   }
   
   public static TemplateDeclaration[] values() {

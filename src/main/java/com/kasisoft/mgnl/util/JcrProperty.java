@@ -20,7 +20,6 @@ import lombok.*;
  * @author daniel.kasmeroglu@kasisoft.net
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(of = "property")
 public class JcrProperty<T> {
   
   @Getter
@@ -61,6 +60,11 @@ public class JcrProperty<T> {
   
   public Predicate<Node> isOfValue( T expected ) {
     return $ -> hasValue( $, expected );
+  }
+  
+  @Override
+  public String toString() {
+    return property;
   }
 
   @Nullable
