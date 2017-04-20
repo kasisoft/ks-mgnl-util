@@ -1,10 +1,15 @@
 package com.kasisoft.mgnl.util;
 
+import static com.kasisoft.mgnl.util.JcrProperties.*;
 import static com.kasisoft.mgnl.util.internal.Messages.*;
 
-import info.magnolia.dam.jcr.*;
+import info.magnolia.repository.*;
+
+import info.magnolia.context.*;
 
 import info.magnolia.jcr.util.*;
+
+import info.magnolia.jcr.*;
 
 import com.kasisoft.libs.common.function.*;
 
@@ -17,7 +22,7 @@ import java.util.function.*;
 
 import java.util.*;
 
-import info.magnolia.jcr.*;
+import info.magnolia.dam.jcr.*;
 
 /**
  * Collection of helpful node related functionalities. These functions will generate {@link RuntimeRepositoryException}
@@ -222,6 +227,17 @@ public class NodeFunctions {
       }
     } catch( RepositoryException ex ) {
       throw new RuntimeRepositoryException(ex);
+    }
+    return result;
+  }
+  
+  public static boolean isAuthor() {
+    boolean result = false;
+    try {
+      Node node = MgnlContext.getJCRSession( RepositoryConstants.CONFIG ).getNode( "/server" );
+      result    = Admin.getValue( node );
+    } catch( RepositoryException ex ) {
+      throw new RuntimeRepositoryException( ex );
     }
     return result;
   }
