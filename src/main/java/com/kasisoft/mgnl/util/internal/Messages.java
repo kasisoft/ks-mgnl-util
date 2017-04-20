@@ -13,6 +13,9 @@ public class Messages {
   @I18N("missing page node with id '%s'")
   public static I18NFormatter               error_missing_page_node;
 
+  @I18N("missing node '%s' in workspace '%s'")
+  public static I18NFormatter               error_missing_node;
+
   @I18N("cannot register '%s' as there's a conflict with '%s' !")
   public static I18NFormatter               error_template_decl_conflict;
   

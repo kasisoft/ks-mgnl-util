@@ -29,9 +29,9 @@ public class JcrProperty<T> {
   TriConsumer<Node, String, T>   saver;
   T                              defaultValue;
   
-  public JcrProperty( @Nonnull String name, @Nonnull BiFunction<Node, String, T> converter, @Nonnull TriConsumer<Node, String, T> tosave, T defValue ) {
+  public JcrProperty( @Nonnull String name, @Nonnull BiFunction<Node, String, T> toload, @Nonnull TriConsumer<Node, String, T> tosave, T defValue ) {
     property      = name;
-    loader        = converter;
+    loader        = toload;
     saver         = tosave;
     defaultValue  = defValue;
     LocalData.properties.put( name, this );

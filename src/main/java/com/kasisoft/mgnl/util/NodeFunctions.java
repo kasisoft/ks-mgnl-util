@@ -3,10 +3,6 @@ package com.kasisoft.mgnl.util;
 import static com.kasisoft.mgnl.util.JcrProperties.*;
 import static com.kasisoft.mgnl.util.internal.Messages.*;
 
-import info.magnolia.repository.*;
-
-import info.magnolia.context.*;
-
 import info.magnolia.jcr.util.*;
 
 import info.magnolia.jcr.*;
@@ -232,14 +228,7 @@ public class NodeFunctions {
   }
   
   public static boolean isAuthor() {
-    boolean result = false;
-    try {
-      Node node = MgnlContext.getJCRSession( RepositoryConstants.CONFIG ).getNode( "/server" );
-      result    = Admin.getValue( node );
-    } catch( RepositoryException ex ) {
-      throw new RuntimeRepositoryException( ex );
-    }
-    return result;
+    return Admin.getValue().booleanValue();
   }
   
 } /* ENDCLASS */

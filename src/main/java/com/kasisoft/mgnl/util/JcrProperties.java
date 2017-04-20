@@ -7,8 +7,9 @@ import info.magnolia.jcr.util.*;
  */
 public class JcrProperties {
 
-  public static JcrProperty<String>   DefaultBaseUrl  = new JcrProperty<>( "defaultBaseUrl"               , PropertyLoaders::toString  , PropertySavers::saveString  , null          );
-  public static JcrProperty<String>   MgnlTemplate    = new JcrProperty<>( NodeTypes.Renderable.TEMPLATE  , PropertyLoaders::toString  , PropertySavers::saveString  , ""            );
-  public static JcrProperty<Boolean>  Admin           = new JcrProperty<>( "admin"                        , PropertyLoaders::toBoolean , PropertySavers::saveBoolean , Boolean.FALSE );
+  public static JcrFixedProperty<Boolean>  Admin           = new JcrFixedProperty<>( "/server", "admin"                        , PropertyLoaders::toBoolean , PropertySavers::saveBoolean , Boolean.FALSE );
+  public static JcrFixedProperty<String>   DefaultBaseUrl  = new JcrFixedProperty<>( "/server", "defaultBaseUrl"               , PropertyLoaders::toString  , PropertySavers::saveString  , null          );
+  
+  public static JcrProperty<String>        MgnlTemplate    = new JcrProperty<>( NodeTypes.Renderable.TEMPLATE  , PropertyLoaders::toString  , PropertySavers::saveString  , ""            );
   
 } /* ENDCLASS */
