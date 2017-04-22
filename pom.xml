@@ -51,6 +51,7 @@
     <version-lombok>1.16.16</version-lombok>
     <version-magnolia>5.5.3-SNAPSHOT</version-magnolia>
     <version-testng>6.9.4</version-testng>
+    <version-tomcat>8.5.13</version-tomcat>
     
     <plugin-version-cobertura-maven>2.7</plugin-version-cobertura-maven>
     
@@ -63,6 +64,14 @@
         <groupId>com.kasisoft.mgnl</groupId>
         <artifactId>com.kasisoft.mgnl.dependencies</artifactId>
         <version>${version-magnolia}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.kasisoft</groupId>
+        <artifactId>com.kasisoft.pom.tomcat</artifactId>
+        <version>${version-tomcat}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -132,6 +141,11 @@
       <artifactId>jcr</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-servlet-api</artifactId>
+    </dependency>
+      
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
