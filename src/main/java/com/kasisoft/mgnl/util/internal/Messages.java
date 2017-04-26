@@ -7,6 +7,9 @@ import com.kasisoft.libs.common.i18n.*;
  */
 public class Messages {
 
+  @I18N("url '%s' caused accessing a writer after the stream had been accessed")
+  public static I18NFormatter               error_accessed_stream;
+  
   @I18N("failed to save property '%s' with value '%s'")
   public static I18NFormatter               error_failed_to_save_property;
   
@@ -18,6 +21,9 @@ public class Messages {
 
   @I18N("cannot register '%s' as there's a conflict with '%s' !")
   public static I18NFormatter               error_template_decl_conflict;
+
+  @I18N("the encoding '%s' is not supported")
+  public static I18NFormatter               error_unsupported_encoding;
   
   @I18N("executing query (%s): %s")
   public static I18NFormatter               executing_query;
