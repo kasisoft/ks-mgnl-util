@@ -1,4 +1,4 @@
-package com.kasisoft.mgnl.filter;
+package com.kasisoft.mgnl.util.filter;
 
 import static com.kasisoft.mgnl.util.internal.Messages.*;
 

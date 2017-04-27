@@ -82,6 +82,7 @@
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>${version-lombok}</version>
+        <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -146,6 +147,21 @@
       <artifactId>lombok</artifactId>
     </dependency>
   
+    <dependency>
+      <groupId>info.magnolia.resources</groupId>
+      <artifactId>magnolia-resources</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>info.magnolia.core</groupId>
+      <artifactId>magnolia-resource-loader</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+    </dependency>
+    
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>

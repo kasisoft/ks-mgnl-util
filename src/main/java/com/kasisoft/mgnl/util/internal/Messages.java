@@ -10,6 +10,9 @@ public class Messages {
   @I18N("url '%s' caused accessing a writer after the stream had been accessed")
   public static I18NFormatter               error_accessed_stream;
   
+  @I18N("the resource '%s' could not be loaded")
+  public static I18NFormatter               error_resource_not_found;
+  
   @I18N("failed to save property '%s' with value '%s'")
   public static I18NFormatter               error_failed_to_save_property;
   

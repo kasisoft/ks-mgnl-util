@@ -6,6 +6,8 @@ import static org.mockito.Mockito.*;
 
 import com.kasisoft.libs.common.constants.*;
 
+import com.kasisoft.mgnl.util.filter.*;
+
 import org.testng.annotations.*;
 
 import javax.servlet.http.*;

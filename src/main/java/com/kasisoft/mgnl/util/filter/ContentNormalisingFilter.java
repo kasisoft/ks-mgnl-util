@@ -1,4 +1,4 @@
-package com.kasisoft.mgnl.filter;
+package com.kasisoft.mgnl.util.filter;
 
 import org.apache.commons.lang3.*;
 import org.jsoup.*;
