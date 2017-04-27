@@ -1,12 +1,10 @@
-package com.kasisoft.mgnl.filter;
+package com.kasisoft.mgnl.util.filter;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import com.kasisoft.libs.common.constants.*;
-
-import com.kasisoft.mgnl.util.filter.*;
 
 import org.testng.annotations.*;
 

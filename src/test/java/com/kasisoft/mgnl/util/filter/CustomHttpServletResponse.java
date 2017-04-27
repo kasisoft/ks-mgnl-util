@@ -1,4 +1,4 @@
-package com.kasisoft.mgnl.filter;
+package com.kasisoft.mgnl.util.filter;
 
 import com.kasisoft.libs.common.constants.*;
 
