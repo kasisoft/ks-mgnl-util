@@ -29,12 +29,12 @@ import info.magnolia.resourceloader.*;
  * @author daniel.kasmeroglu@kasisoft.net
  */
 @Slf4j
-public class ContentLengthResourceServlet extends ResourcesServlet {
+public class ContentLengthResourcesServlet extends ResourcesServlet {
 
   Bucket<ByteArrayOutputStream>   byteouts = new Bucket<>( BucketFactories.newByteArrayOutputStreamFactory() );
   
   @Inject
-  public ContentLengthResourceServlet( ResourceLinker linker ) {
+  public ContentLengthResourcesServlet( ResourceLinker linker ) {
     super( linker );
   }
 
