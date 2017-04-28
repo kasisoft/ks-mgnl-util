@@ -2,6 +2,7 @@ package com.kasisoft.mgnl.util.model;
 
 import static com.kasisoft.mgnl.util.QueryFunctions.*;
 import static com.kasisoft.mgnl.util.internal.Messages.*;
+import static com.kasisoft.mgnl.util.JcrProperties.*;
 
 import info.magnolia.repository.*;
 
@@ -163,7 +164,11 @@ public final class TemplateDeclaration implements Predicate<Node> {
   public static TemplateDeclaration[] values() {
     return LocalData.byId.values().toArray( new TemplateDeclaration[ LocalData.byId.size() ] );
   }
-  
+
+  public static TemplateDeclaration valueById( @Nullable Node node ) {
+    return valueBy( LocalData.byId, MgnlTemplate.getValue( node ) );
+  }
+
   public static TemplateDeclaration valueById( @Nullable String templateId ) {
     return valueBy( LocalData.byId, templateId );
   }
