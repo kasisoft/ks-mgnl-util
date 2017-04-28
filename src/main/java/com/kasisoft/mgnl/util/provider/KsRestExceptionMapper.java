@@ -17,7 +17,10 @@ import lombok.experimental.*;
 import lombok.*;
 
 /**
- * This implementation also supports JAX-RS exceptions that indicate an invalid access. 
+ * This implementation also supports JAX-RS exceptions that indicate an invalid access. It can be configured
+ * in this property:
+ * 
+ * <code>/modules/rest-integration/config/additionalProviders/restExceptionMapper@providerClass</code>
  * 
  * @author daniel.kasmeroglu@kasisoft.net
  */
