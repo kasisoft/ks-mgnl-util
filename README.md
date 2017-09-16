@@ -1,42 +1,44 @@
-Purpose
-=======
+# Purpose
+
 
 This library provides a collection of useful helpers to deal with JCR/Magnolia related functionalities.
 
 
-Contact
-=======
+# Infos
 
-* daniel.kasmeroglu@kasisoft.net
-
-
-Requirements
-============
-
- * Java 8
- * Magnolia 5.5.6
-
-Jira
-====
-
-* [https://kasisoft.com/jira/projects/MGNLUTIL/issues](https://kasisoft.com/jira/projects/MGNLUTIL/issues)
+* [eMail: daniel.kasmeroglu@kasisoft.net](mailto:daniel.kasmeroglu@kasisoft.net)
+* [Jira](https://kasisoft.com/jira/projects/MGNLUTIL)
+* [Jenkins](https://kasisoft.com/jenkins/job/mgnl.com.kasisoft.mgnl.util)
+* [GIT](https://kasisoft.com/bitbucket/projects/MGNL/repos/com.kasisoft.mgnl.util)
 
 
-Maven
-=====
+# Development Setup
 
-Release
--------
+I assume that you're familiar with Maven. If not I suggest to visit the following page:
+
+* https://maven.apache.org/
+
+
+## Requirements
+
+* Java 8
+* Magnolia 5.5.6
+
+
+## Maven
+
+### Releases
 
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
          <artifactId>com.kasisoft.mgnl.util</artifactId>
          <version>0.3</version>
      </dependency>
-     
-     
-Snapshot
---------
+
+
+### Snapshots
+
+Snapshots can be used while accessing a dedicated maven repository. Your POM needs the following settings:
 
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
@@ -57,8 +59,9 @@ Snapshot
          </repository>
      </repositories>
      
-License
-=======
+     
+
+# License
 
 MIT License
 
