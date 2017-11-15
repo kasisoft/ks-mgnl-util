@@ -157,7 +157,7 @@ public class PropertyLoaders {
   public static <T> T toType( Node jcr, String propertyName, T defVal, Function<String, T> function ) {
     T result = null;
     if( jcr != null ) {
-      String strValue = PropertyUtil.getString( jcr, propertyName );
+      String strValue = StringFunctions.cleanup( PropertyUtil.getString( jcr, propertyName ) );
       if( strValue != null ) {
         if( strValue.length() > 0 ) {
           result = function.apply( strValue );
