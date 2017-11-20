@@ -8,8 +8,8 @@ This library provides a collection of useful helpers to deal with JCR/Magnolia r
 
 * [eMail: daniel.kasmeroglu@kasisoft.net](mailto:daniel.kasmeroglu@kasisoft.net)
 * [Jira](https://kasisoft.com/jira/projects/MGNLUTIL)
-* [Jenkins](https://kasisoft.com/jenkins/job/mgnl.com.kasisoft.mgnl.util)
-* [GIT](https://kasisoft.com/bitbucket/projects/MGNL/repos/com.kasisoft.mgnl.util)
+* [Jenkins](https://kasisoft.com/jenkins/job/mgnl.ks-mgnl-util)
+* [GIT](https://kasisoft.com/bitbucket/projects/MGNL/repos/ks-mgnl-util)
 
 
 # Development Setup
@@ -31,8 +31,8 @@ I assume that you're familiar with Maven. If not I suggest to visit the followin
 
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
-         <artifactId>com.kasisoft.mgnl.util</artifactId>
-         <version>0.3</version>
+         <artifactId>ks-mgnl-util</artifactId>
+         <version>0.5</version>
      </dependency>
 
 
@@ -42,8 +42,8 @@ Snapshots can be used while accessing a dedicated maven repository. Your POM nee
 
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
-         <artifactId>com.kasisoft.mgnl.util</artifactId>
-         <version>0.4-SNAPSHOT</version>
+         <artifactId>ks-mgnl-util</artifactId>
+         <version>0.5-SNAPSHOT</version>
      </dependency>
      
      <repositories>
