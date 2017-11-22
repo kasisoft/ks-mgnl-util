@@ -4,8 +4,6 @@ import static com.kasisoft.mgnl.util.internal.Messages.*;
 
 import info.magnolia.context.*;
 
-import org.apache.commons.lang3.*;
-
 import javax.servlet.http.*;
 
 import javax.servlet.*;
@@ -13,6 +11,8 @@ import javax.servlet.*;
 import javax.annotation.*;
 
 import java.io.*;
+
+import java.nio.charset.*;
 
 import lombok.extern.slf4j.*;
 
@@ -45,7 +45,7 @@ public class CaptureReplayWrapper extends HttpServletResponseWrapper {
   public String getCharacterEncoding() {
     String result = super.getCharacterEncoding();
     if( result == null ) {
-      result = CharEncoding.UTF_8;
+      result = StandardCharsets.UTF_8.name();
     }
     return result;
   }
