@@ -7,6 +7,8 @@ import info.magnolia.jcr.util.*;
 
 import info.magnolia.jcr.*;
 
+import com.kasisoft.libs.common.text.*;
+
 import com.kasisoft.libs.common.function.*;
 
 import org.apache.commons.lang3.*;
@@ -226,6 +228,30 @@ public class NodeFunctions {
     }
     return result;
   }
+  
+  public static Node getOrCreateNode( @Nonnull Node base, @Nonnull String relpath ) {
+    Node   result  = null;
+    String dirname = relpath;
+    String newpath = null;
+    int    idx     = relpath.indexOf('/');
+    if( idx != -1 ) {
+      dirname = relpath.substring( 0, idx );
+      newpath = StringFunctions.cleanup( relpath.substring( idx + 1 ) );
+    }
+    result = getNode( base, dirname );
+    if( result == null ) {
+      try {
+        result = base.addNode( dirname );
+      } catch( RepositoryException ex ) {
+        throw new RuntimeRepositoryException(ex);
+      }
+    }
+    if( newpath != null ) {
+      result = getOrCreateNode( result, newpath );
+    }
+    return result;
+  }
+  
   
   public static boolean isAuthor() {
     return Admin.getValue().booleanValue();
