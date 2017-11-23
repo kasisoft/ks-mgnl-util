@@ -3,6 +3,8 @@ package com.kasisoft.mgnl.util;
 import static com.kasisoft.mgnl.util.JcrProperties.*;
 import static com.kasisoft.mgnl.util.internal.Messages.*;
 
+import info.magnolia.context.*;
+
 import info.magnolia.jcr.util.*;
 
 import info.magnolia.jcr.*;
@@ -77,8 +79,8 @@ public class NodeFunctions {
   public static String getIdentifier( @Nonnull Node node ) {
     try {
       return node.getIdentifier();
-    } catch( RepositoryException ex ) {
-      throw new RuntimeRepositoryException(ex);
+    } catch( Exception ex ) {
+      throw toRuntimeRepositoryException(ex);
     }
   }
 
@@ -86,8 +88,8 @@ public class NodeFunctions {
   public static String getName( @Nonnull Node node ) {
     try {
       return node.getName();
-    } catch( RepositoryException ex ) {
-      throw new RuntimeRepositoryException(ex);
+    } catch( Exception ex ) {
+      throw toRuntimeRepositoryException(ex);
     }
   }
 
@@ -118,8 +120,8 @@ public class NodeFunctions {
           result.add( transform.apply( nextNode ) );
         }
       }
-    } catch( RepositoryException ex ) {
-      throw new RuntimeRepositoryException(ex);
+    } catch( Exception ex ) {
+      throw toRuntimeRepositoryException(ex);
     }
     return result;
   }
@@ -159,8 +161,8 @@ public class NodeFunctions {
   public static boolean isNodeType( @Nonnull Node node, @Nonnull String nodetype ) {
     try {
       return node.isNodeType( nodetype );
-    } catch( RepositoryException ex ) {
-      throw new RuntimeRepositoryException(ex);
+    } catch( Exception ex ) {
+      throw toRuntimeRepositoryException(ex);
     }
   }
 
@@ -194,8 +196,8 @@ public class NodeFunctions {
             result = current;
           }
         }
-      } catch( RepositoryException ex ) {
-        throw new RuntimeRepositoryException(ex);
+      } catch( Exception ex ) {
+        throw toRuntimeRepositoryException(ex);
       }
     }
     return result;
@@ -211,8 +213,8 @@ public class NodeFunctions {
       } else {
         throw new RepositoryException( error_missing_page_node.format( currentNode.getIdentifier() ) );
       }
-    } catch( RepositoryException ex ) {
-      throw new RuntimeRepositoryException(ex);
+    } catch( Exception ex ) {
+      throw toRuntimeRepositoryException(ex);
     }
   }
 
@@ -223,8 +225,8 @@ public class NodeFunctions {
       if( node.hasNode( relpath ) ) {
         result = node.getNode( relpath );
       }
-    } catch( RepositoryException ex ) {
-      throw new RuntimeRepositoryException(ex);
+    } catch( Exception ex ) {
+      throw toRuntimeRepositoryException(ex);
     }
     return result;
   }
@@ -242,8 +244,8 @@ public class NodeFunctions {
     if( result == null ) {
       try {
         result = base.addNode( dirname );
-      } catch( RepositoryException ex ) {
-        throw new RuntimeRepositoryException(ex);
+      } catch( Exception ex ) {
+        throw toRuntimeRepositoryException(ex);
       }
     }
     if( newpath != null ) {
@@ -255,6 +257,124 @@ public class NodeFunctions {
   
   public static boolean isAuthor() {
     return Admin.getValue().booleanValue();
+  }
+
+  public static <T, C> BiConsumer<T, C> createBiForWorkspaceDo( @Nonnull String workspace, ETriConsumer<Session, T, C, RepositoryException> consumer ) {
+    return ($1, $2) -> {
+      forWorkspaceDo( workspace, consumer, $1, $2 );
+    };
+  }
+  
+  private static <T, C> void forWorkspaceDo( String workspace, ETriConsumer<Session, T, C, RepositoryException> consumer, T obj1, C obj2 ) {
+    Session                    session = null;
+    RuntimeRepositoryException rrex    = null;
+    try {
+      session = MgnlContext.getJCRSession( workspace );
+      consumer.accept( session, obj1, obj2 );
+    } catch( Exception ex ) {
+      rrex = toRuntimeRepositoryException( ex ); 
+      throw rrex;
+    } finally {
+      if( session != null ) {
+        try {
+          session.save();
+        } catch( Exception ex ) {
+          if( rrex == null ) {
+            throw toRuntimeRepositoryException(ex);
+          }
+        }
+      }
+    }
+  }
+
+  public static <T> Consumer<T> createForWorkspaceDo( @Nonnull String workspace, EBiConsumer<Session, T, RepositoryException> consumer ) {
+    return ($_) -> {
+      forWorkspaceDo( workspace, consumer, $_ );
+    };
+  }
+  
+  private static <T> void forWorkspaceDo( String workspace, EBiConsumer<Session, T, RepositoryException> consumer, T obj  ) {
+    Session                    session = null;
+    RuntimeRepositoryException rrex    = null;
+    try {
+      session = MgnlContext.getJCRSession( workspace );
+      consumer.accept( session, obj );
+    } catch( Exception ex ) {
+      rrex = toRuntimeRepositoryException( ex ); 
+      throw rrex;
+    } finally {
+      if( session != null ) {
+        try {
+          session.save();
+        } catch( Exception ex ) {
+          if( rrex == null ) {
+            throw toRuntimeRepositoryException(ex);
+          }
+        }
+      }
+    }
+  }
+
+  public static <T, C, R> BiFunction<T, C, R> createBiForWorkspace( @Nonnull String workspace, ETriFunction<Session, T, C, R, RepositoryException> function ) {
+    return ($1, $2) -> forWorkspace( workspace, function, $1, $2 );
+  }
+
+  private static <T, C, R> R forWorkspace( String workspace, ETriFunction<Session, T, C, R, RepositoryException> function, T obj1, C obj2 ) {
+    Session                    session = null;
+    RuntimeRepositoryException rrex    = null;
+    try {
+      session = MgnlContext.getJCRSession( workspace );
+      return function.apply( session, obj1, obj2 );
+    } catch( Exception ex ) {
+      rrex = toRuntimeRepositoryException( ex ); 
+      throw rrex;
+    } finally {
+      if( session != null ) {
+        try {
+          session.save();
+        } catch( Exception ex ) {
+          if( rrex == null ) {
+            throw toRuntimeRepositoryException(ex);
+          }
+        }
+      }
+    }
+  }
+  
+  public static <T, R> Function<T, R> createForWorkspace( @Nonnull String workspace, EBiFunction<Session, T, R, RepositoryException> function ) {
+    return ($_) -> forWorkspace( workspace, function, $_ );
+  }
+
+  private static <T, R> R forWorkspace( String workspace, EBiFunction<Session, T, R, RepositoryException> function, T obj  ) {
+    Session                    session = null;
+    RuntimeRepositoryException rrex    = null;
+    try {
+      session = MgnlContext.getJCRSession( workspace );
+      return function.apply( session, obj );
+    } catch( Exception ex ) {
+      rrex = toRuntimeRepositoryException( ex ); 
+      throw rrex;
+    } finally {
+      if( session != null ) {
+        try {
+          session.save();
+        } catch( Exception ex ) {
+          if( rrex == null ) {
+            throw toRuntimeRepositoryException(ex);
+          }
+        }
+      }
+    }
+  }
+
+  public static RuntimeRepositoryException toRuntimeRepositoryException( Exception ex ) {
+    if( ex instanceof RuntimeRepositoryException ) {
+      return (RuntimeRepositoryException) ex;
+    } else if( ex instanceof RepositoryException ) {
+      return new RuntimeRepositoryException( (RepositoryException) ex );
+    } else {
+      return toRuntimeRepositoryException( new RepositoryException(ex) );
+    }
   }
   
 } /* ENDCLASS */
