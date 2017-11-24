@@ -2,7 +2,6 @@ package com.kasisoft.mgnl.util.model;
 
 import static com.kasisoft.mgnl.util.QueryFunctions.*;
 import static com.kasisoft.mgnl.util.internal.Messages.*;
-import static com.kasisoft.mgnl.util.JcrProperties.*;
 
 import info.magnolia.repository.*;
 
@@ -29,7 +28,7 @@ import lombok.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = "id")
 @Slf4j
-public final class TemplateDeclaration implements Predicate<Node> {
+public class TemplateDeclaration<T extends TemplateDeclaration> implements Predicate<Node> {
 
   // a speaking name
   @Getter String        name;
@@ -45,19 +44,19 @@ public final class TemplateDeclaration implements Predicate<Node> {
   
   String                str;
   
-  public TemplateDeclaration( @Nonnull String templateName, @Nonnull String templateId, boolean renderer, String ... subIds ) {
+  TemplateDeclaration( @Nonnull Map<String, T> byId, @Nonnull Map<String, T> byName, @Nonnull String templateName, @Nonnull String templateId, boolean renderer, String ... subIds ) {
     name          = templateName;
     id            = templateId;
     rendererPage  = renderer;
     str           = String.format( "%s(%s)", name, id );
     childIds      = Collections.unmodifiableSet( new HashSet<>( Arrays.asList( subIds ) ) );
-    duplicateCheck( LocalData.byId   , id   , name, id );
-    duplicateCheck( LocalData.byName , name , name, id );
-    LocalData . byId   . put( id   , this );
-    LocalData . byName . put( name , this );
+    duplicateCheck( byId   , id   , name, id );
+    duplicateCheck( byName , name , name, id );
+    byId   . put( id   , (T) this );
+    byName . put( name , (T) this );
   }
   
-  private void duplicateCheck( Map<String, TemplateDeclaration> map, String candidate, String name, String id ) {
+  private void duplicateCheck( Map<String, T> map, String candidate, String name, String id ) {
     if( map.containsKey( candidate ) ) {
       log.error( error_template_decl_conflict.format( this, map.get( candidate ) ) );
       throw new IllegalStateException( error_template_decl_conflict.format( this, map.get( candidate ) ) );
@@ -161,35 +160,4 @@ public final class TemplateDeclaration implements Predicate<Node> {
     return str;
   }
   
-  public static TemplateDeclaration[] values() {
-    return LocalData.byId.values().toArray( new TemplateDeclaration[ LocalData.byId.size() ] );
-  }
-
-  public static TemplateDeclaration valueById( @Nullable Node node ) {
-    return valueBy( LocalData.byId, MgnlTemplate.getValue( node ) );
-  }
-
-  public static TemplateDeclaration valueById( @Nullable String templateId ) {
-    return valueBy( LocalData.byId, templateId );
-  }
-
-  public static TemplateDeclaration valueByName( @Nullable String templateName ) {
-    return valueBy( LocalData.byName, templateName );
-  }
-  
-  private static TemplateDeclaration valueBy( Map<String, TemplateDeclaration> map, String key ) {
-    TemplateDeclaration result = null;
-    if( key != null ) {
-      result = map.get( key );
-    }
-    return result;
-  }
-
-  private static class LocalData {
-  
-    private static Map<String, TemplateDeclaration>   byId    = new HashMap<>();
-    private static Map<String, TemplateDeclaration>   byName  = new HashMap<>();
-    
-  } /* ENDCLASS */
-
 } /* ENDCLASS */
