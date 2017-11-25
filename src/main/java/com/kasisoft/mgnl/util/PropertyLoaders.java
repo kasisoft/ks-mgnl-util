@@ -11,12 +11,35 @@ import javax.jcr.*;
 
 import java.util.function.*;
 
+import java.util.*;
+
 /**
  * A bunch of functions allowing to load a property of a certain datatype.
  * 
  * @author daniel.kasmeroglu@kasisoft.net
  */
 public class PropertyLoaders {
+
+  public static Date toDate( Node jcr, @Nonnull String propertyName, Date defVal ) {
+    Calendar calendar = toCalendar( jcr, propertyName );
+    Date     result   = defVal;
+    if( calendar != null ) {
+      result = calendar.getTime();
+    }
+    return result;
+  }
+
+  public static Date toDate( Node jcr, @Nonnull String propertyName ) {
+    return toDate( jcr, propertyName, null );
+  }
+
+  public static Calendar toCalendar( Node jcr, @Nonnull String propertyName, Calendar defVal ) {
+    return PropertyUtil.getDate( jcr, propertyName, defVal );
+  }
+
+  public static Calendar toCalendar( Node jcr, @Nonnull String propertyName ) {
+    return toCalendar( jcr, propertyName, null );
+  }
 
   public static boolean toBoolean( Node jcr, @Nonnull String propertyName, boolean defVal ) {
     Boolean result = toBoolean( jcr, propertyName );

@@ -7,6 +7,8 @@ import info.magnolia.jcr.util.*;
 import javax.annotation.*;
 import javax.jcr.*;
 
+import java.util.*;
+
 import lombok.extern.slf4j.*;
 
 /**
@@ -16,7 +18,20 @@ import lombok.extern.slf4j.*;
  */
 @Slf4j
 public class PropertySavers {
-  
+
+  public static void saveDate( @Nonnull Node jcr, @Nonnull String propertyName, Date value ) {
+    Calendar calendar = null;
+    if( value != null ) {
+      calendar = Calendar.getInstance();
+      calendar.setTime( value );
+    }
+    save( jcr, propertyName, calendar );
+  }
+
+  public static void saveCalendar( @Nonnull Node jcr, @Nonnull String propertyName, Calendar value ) {
+    save( jcr, propertyName, value );
+  }
+
   public static void saveBoolean( @Nonnull Node jcr, @Nonnull String propertyName, boolean value ) {
     save( jcr, propertyName, value );
   }
