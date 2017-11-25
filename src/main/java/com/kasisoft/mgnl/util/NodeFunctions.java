@@ -243,7 +243,7 @@ public class NodeFunctions {
     result = getNode( base, dirname );
     if( result == null ) {
       try {
-        result = base.addNode( dirname );
+        result = base.addNode( dirname, getNodeType( base, dirname ) );
       } catch( Exception ex ) {
         throw toRuntimeRepositoryException(ex);
       }
@@ -254,6 +254,22 @@ public class NodeFunctions {
     return result;
   }
   
+  // basic attempt to select a proper nodetype
+  private static String getNodeType( Node parent, String name ) throws RepositoryException {
+    String result = ENodeType.ContentNode.getNodeType();
+    if( parent.getDepth() == 0 ) {
+      result = ENodeType.Content.getNodeType();
+    } else if( parent.getDepth() == 1 ) {
+      if( "modules".equals( name ) ) {
+        result = ENodeType.Content.getNodeType();
+      }
+    } else if( parent.getDepth() == 2 ) {
+      if( "config".equals( name ) ) {
+        result = ENodeType.Content.getNodeType();
+      }
+    }
+    return result;
+  }
   
   public static boolean isAuthor() {
     return Admin.getValue().booleanValue();

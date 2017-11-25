@@ -135,6 +135,30 @@ public class TemplateDeclaration<T extends TemplateDeclaration> implements Predi
   }
   
   /**
+   * Returns the parental/supplied node which matches this template.
+   * 
+   * @param node   The node used to retrieve the parental node from.
+   * 
+   * @return   A matching parental node. 
+   */
+  @Nullable
+  public Node getMatchingParent( @Nullable Node node ) {
+    Node result = null;
+    if( node != null ) {
+      if( test( node ) ) {
+        result = node;
+      } else {
+        try {
+          result = getMatchingParent( node.getParent() );
+        } catch( Exception ex ) {
+          throw NodeFunctions.toRuntimeRepositoryException(ex);
+        }
+      }
+    }
+    return result;
+  }
+  
+  /**
    * Returns <code>true</code> if the supplied template id is allowed to be used as a child of this template
    * declaration.
    * 
