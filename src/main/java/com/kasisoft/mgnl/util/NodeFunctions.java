@@ -393,4 +393,28 @@ public class NodeFunctions {
     }
   }
   
+  @SuppressWarnings("null")
+  @Nullable
+  public static <R> R getParentalModel( @Nullable Object current, @Nonnull Class<R> resultType, @Nonnull Function<Object, Object> getparent ) {
+    R result = null;
+    if( current != null ) {
+      if( resultType.isInstance( current ) ) {
+        result = (R) current;
+      } else {
+        result = getParentalModel( getparent.apply( current ), resultType, getparent );
+      }
+    }
+    return result;
+  }
+
+  @Nonnull
+  public static String toComponentId( @Nonnull Node node ) {
+    String uuid = getIdentifier( node );
+    int    idx  = uuid.indexOf('-');
+    if( idx != -1 ) {
+      uuid = uuid.substring( 0, idx );
+    }
+    return String.format( "id%s", uuid );
+  }
+  
 } /* ENDCLASS */
