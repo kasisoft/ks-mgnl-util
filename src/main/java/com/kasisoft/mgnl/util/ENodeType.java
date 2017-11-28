@@ -19,6 +19,7 @@ import lombok.*;
  * @author daniel.kasmeroglu@kasisoft.net
  */
 @Slf4j
+@ToString(of = "nodetype")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENodeType>>, Comparable<ENodeType> {
 
@@ -44,15 +45,59 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
   public static final ENodeType HasVersion      = new ENodeType( NodeTypes . HasVersion    . NAME );
   ;
   
-  String  nodetype;
+  String        nodetype;
+  Set<String>   allowedChildren;
   
-  public ENodeType( String ntName ) {
+  public ENodeType( String ntName, String ... allowedChildNodes ) {
     nodetype = ntName;
+    if( (allowedChildNodes != null) && (allowedChildNodes.length > 0) ) {
+      allowedChildren = new HashSet<>( Arrays.asList( allowedChildNodes ) );
+    } else {
+      allowedChildren = Collections.emptySet();
+    }
     LocalData.values.put( ntName, this );
+  }
+  
+  public boolean isAllowedChild( @Nullable Node child ) {
+    boolean result = false;
+    if( child != null ) {
+      try {
+        result = isAllowedChild( child.getPrimaryNodeType().getName() );
+      } catch( RepositoryException ex ) {
+        // this child is being rejected due to an error
+        log.error( ex.getLocalizedMessage(), ex );
+      }
+    }
+    return result;
+  }
+
+  public boolean isAllowedChild( @Nullable  ENodeType child ) {
+    if( child != null ) {
+      return isAllowedChild( child.getNodeType() );
+    } else {
+      return false;
+    }
+  }
+  
+  public boolean isAllowedChild( @Nullable String child ) {
+    if( child != null ) {
+      return allowedChildren.contains( child );
+    } else {
+      return false;
+    }
   }
   
   public String getNodeType() {
     return nodetype;
+  }
+  
+  @Nonnull
+  public List<Node> getChildren( @Nullable Node parent ) {
+    List<Node> result = Collections.emptyList();
+    if( parent != null ) {
+      result = NodeFunctions.getChildNodes( parent, this );
+    }
+    return result;
   }
   
   public Node addNode( @Nonnull Node parent, @Nonnull String name ) {
@@ -165,7 +210,23 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
     return result;
   }
 
-  public static ENodeType valueByName( String ntName ) {
+  @Nullable
+  public static ENodeType valueByNode( @Nullable Node node ) {
+    ENodeType result = null;
+    if( node != null ) {
+      try {
+        result = valueByName( node.getPrimaryNodeType().getName() );
+      } catch( RepositoryException ex ) {
+        // edge case and we allow this as the node type is allowed to be unknown to this registry,
+        // so the caller needs to deal with this scenario anyway
+        log.error( ex.getLocalizedMessage(), ex );
+      }
+    }
+    return result;
+  }
+  
+  @Nullable
+  public static ENodeType valueByName( @Nullable String ntName ) {
     ENodeType result = null;
     if( (ntName != null) && LocalData.values.containsKey( ntName ) ) {
       result = LocalData.values.get( ntName );
