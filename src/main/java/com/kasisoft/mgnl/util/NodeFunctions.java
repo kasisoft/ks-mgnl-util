@@ -272,7 +272,7 @@ public class NodeFunctions {
     if( (open != -1) && (close != -1) && (close > open)) {
       return str.substring( open + 1, close );
     } else {
-      return str;
+      return null;
     }
   }
   
