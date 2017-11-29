@@ -91,6 +91,32 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
     return nodetype;
   }
   
+  /**
+   * Returns the parental/supplied node which matches this template.
+   * 
+   * @param node   The node used to retrieve the parental node from.
+   * 
+   * @return   A matching parental node. 
+   */
+  @Nullable
+  public Node getMatchingParent( @Nullable Node node ) {
+    Node result = null;
+    if( node != null ) {
+      if( test( node ) ) {
+        result = node;
+      } else {
+        try {
+          if( node.getDepth() > 1 ) {
+            result = getMatchingParent( node.getParent() );
+          }
+        } catch( Exception ex ) {
+          throw NodeFunctions.toRuntimeRepositoryException(ex);
+        }
+      }
+    }
+    return result;
+  }
+  
   @Nonnull
   public List<Node> getChildren( @Nullable Node parent ) {
     List<Node> result = Collections.emptyList();
