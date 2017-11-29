@@ -240,10 +240,12 @@ public class NodeFunctions {
       dirname = relpath.substring( 0, idx );
       newpath = StringFunctions.cleanup( relpath.substring( idx + 1 ) );
     }
-    result = getNode( base, dirname );
+    String nodetype = extractNodeType( dirname );
+    dirname         = cleanupNodeName( dirname );
+    result          = getNode( base, dirname );
     if( result == null ) {
       try {
-        result = base.addNode( dirname, getNodeType( base, dirname ) );
+        result = base.addNode( dirname, getNodeType( base, dirname, nodetype ) );
       } catch( Exception ex ) {
         throw toRuntimeRepositoryException(ex);
       }
@@ -254,18 +256,42 @@ public class NodeFunctions {
     return result;
   }
   
+  private static String cleanupNodeName( String str ) {
+    int open  = str.indexOf('{');
+    int close = str.indexOf('}');
+    if( (open != -1) && (close != -1) && (close > open)) {
+      return str.substring( 0, open );
+    } else {
+      return str;
+    }
+  }
+
+  private static String extractNodeType( String str ) {
+    int open  = str.indexOf('{');
+    int close = str.indexOf('}');
+    if( (open != -1) && (close != -1) && (close > open)) {
+      return str.substring( open + 1, close );
+    } else {
+      return str;
+    }
+  }
+  
   // basic attempt to select a proper nodetype
-  private static String getNodeType( Node parent, String name ) throws RepositoryException {
-    String result = ENodeType.ContentNode.getNodeType();
-    if( parent.getDepth() == 0 ) {
-      result = ENodeType.Content.getNodeType();
-    } else if( parent.getDepth() == 1 ) {
-      if( "modules".equals( name ) ) {
+  private static String getNodeType( Node parent, String name, String nodetype ) throws RepositoryException {
+    String result = nodetype;
+    if( result == null ) {
+      // determine the node type depending on the nodes position (assuming config like workspace)
+      result = ENodeType.ContentNode.getNodeType();
+      if( parent.getDepth() == 0 ) {
         result = ENodeType.Content.getNodeType();
-      }
-    } else if( parent.getDepth() == 2 ) {
-      if( "config".equals( name ) ) {
-        result = ENodeType.Content.getNodeType();
+      } else if( parent.getDepth() == 1 ) {
+        if( "modules".equals( name ) ) {
+          result = ENodeType.Content.getNodeType();
+        }
+      } else if( parent.getDepth() == 2 ) {
+        if( "config".equals( name ) ) {
+          result = ENodeType.Content.getNodeType();
+        }
       }
     }
     return result;
