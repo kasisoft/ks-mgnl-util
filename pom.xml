@@ -13,7 +13,7 @@
   
   <groupId>com.kasisoft.mgnl</groupId>
   <artifactId>ks-mgnl-util</artifactId>
-  <version>0.5-SNAPSHOT</version>
+  <version>0.5</version>
 
   <name>MGNL :: Util</name>
   <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/com.kasisoft.mgnl.util</url>
