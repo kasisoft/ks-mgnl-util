@@ -43,7 +43,7 @@ Snapshots can be used while accessing a dedicated maven repository. Your POM nee
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
          <artifactId>ks-mgnl-util</artifactId>
-         <version>0.5-SNAPSHOT</version>
+         <version>0.6-SNAPSHOT</version>
      </dependency>
      
      <repositories>
