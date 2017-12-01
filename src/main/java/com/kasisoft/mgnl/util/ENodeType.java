@@ -102,6 +102,14 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
   public Node getMatchingParent( @Nullable Node node ) {
     Node result = null;
     if( node != null ) {
+      result = getMatchingParentImpl( NodeFunctions.getParent( node ) );
+    }
+    return result;
+  }
+
+  private Node getMatchingParentImpl( @Nullable Node node ) {
+    Node result = null;
+    if( node != null ) {
       if( test( node ) ) {
         result = node;
       } else {
@@ -116,7 +124,7 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
     }
     return result;
   }
-  
+
   @Nonnull
   public List<Node> getChildren( @Nullable Node parent ) {
     List<Node> result = Collections.emptyList();

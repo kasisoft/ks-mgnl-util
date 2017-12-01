@@ -230,7 +230,18 @@ public class NodeFunctions {
     }
     return result;
   }
-  
+
+  @Nullable
+  public static Node getParent( @Nonnull Node node ) {
+    Node result = null;
+    try {
+      result = node.getParent();
+    } catch( Exception ex ) {
+      throw toRuntimeRepositoryException(ex);
+    }
+    return result;
+  }
+
   public static Node getOrCreateNode( @Nonnull Node base, @Nonnull String relpath ) {
     Node   result  = null;
     String dirname = relpath;

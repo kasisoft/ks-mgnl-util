@@ -145,6 +145,14 @@ public class TemplateDeclaration<T extends TemplateDeclaration> implements Predi
   public Node getMatchingParent( @Nullable Node node ) {
     Node result = null;
     if( node != null ) {
+      result = getMatchingParentImpl( NodeFunctions.getParent( node ) );
+    }
+    return result;
+  }
+
+  private Node getMatchingParentImpl( @Nullable Node node ) {
+    Node result = null;
+    if( node != null ) {
       if( test( node ) ) {
         result = node;
       } else {
@@ -157,7 +165,7 @@ public class TemplateDeclaration<T extends TemplateDeclaration> implements Predi
     }
     return result;
   }
-  
+
   /**
    * Returns <code>true</code> if the supplied template id is allowed to be used as a child of this template
    * declaration.
