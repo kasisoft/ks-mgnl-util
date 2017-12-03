@@ -2,6 +2,8 @@ package com.kasisoft.mgnl.util.model;
 
 import static com.kasisoft.mgnl.util.JcrProperties.*;
 
+import com.kasisoft.mgnl.util.*;
+
 import javax.annotation.*;
 import javax.jcr.*;
 
@@ -18,7 +20,7 @@ import lombok.*;
 public final class ComponentDeclaration extends TemplateDeclaration<ComponentDeclaration> {
 
   public ComponentDeclaration( @Nonnull String templateName, @Nonnull String templateId, boolean renderer, String ... subIds ) {
-    super( LocalData.byId, LocalData.byName, templateName, templateId, renderer, subIds );
+    super( LocalData.byId, LocalData.byName, templateName, templateId, ENodeType.Component.getNodeType(), renderer, subIds );
   }
   
   public static ComponentDeclaration[] values() {

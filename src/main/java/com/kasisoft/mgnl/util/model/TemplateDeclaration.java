@@ -41,13 +41,16 @@ public class TemplateDeclaration<T extends TemplateDeclaration> implements Predi
   
   // if true this component provides a webview for a record and thus isn't dedicated to a single page
   @Getter boolean       rendererPage;
+
+  @Getter String        nodeType;
   
   String                str;
   
-  TemplateDeclaration( @Nonnull Map<String, T> byId, @Nonnull Map<String, T> byName, @Nonnull String templateName, @Nonnull String templateId, boolean renderer, String ... subIds ) {
+  TemplateDeclaration( @Nonnull Map<String, T> byId, @Nonnull Map<String, T> byName, @Nonnull String templateName, @Nonnull String templateId, @Nonnull String nodetype, boolean renderer, String ... subIds ) {
     name          = templateName;
     id            = templateId;
     rendererPage  = renderer;
+    nodeType      = nodetype;
     str           = String.format( "%s(%s)", name, id );
     childIds      = Collections.unmodifiableSet( new HashSet<>( Arrays.asList( subIds ) ) );
     duplicateCheck( byId   , id   , name, id );
@@ -130,8 +133,8 @@ public class TemplateDeclaration<T extends TemplateDeclaration> implements Predi
    */
   @Nonnull
   public List<Node> getNodes( @Nonnull Consumer<Exception> handler ) {
-    String query = "//element(*,mgnl:page)[@mgnl:template='%s']";
-    return xpath.list( RepositoryConstants.WEBSITE, query, handler, id );
+    String query = "//element(*,%s)[@mgnl:template='%s']";
+    return xpath.list( RepositoryConstants.WEBSITE, query, handler, nodeType, id );
   }
   
   /**
