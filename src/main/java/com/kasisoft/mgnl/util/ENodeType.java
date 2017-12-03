@@ -57,7 +57,15 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
     }
     LocalData.values.put( ntName, this );
   }
-  
+
+  public <R> List<R> list( String workspace, Function<Node, R> transform, Consumer<Exception> exceptionHandler ) {
+    return QueryFunctions.xpath.list( workspace, transform, "//element(*, %s)", exceptionHandler, nodetype );
+  }
+
+  public <R> List<R> list( String workspace, Function<Node, R> transform ) {
+    return QueryFunctions.xpath.list( workspace, transform, "//element(*, %s)", null, nodetype );
+  }
+
   public boolean isAllowedChild( @Nullable Node child ) {
     boolean result = false;
     if( child != null ) {

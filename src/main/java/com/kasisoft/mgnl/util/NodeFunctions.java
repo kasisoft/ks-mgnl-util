@@ -453,5 +453,17 @@ public class NodeFunctions {
     }
     return String.format( "id%s", uuid );
   }
+
+  public static <R> R forContext( JcrExecutionUnit<R> unit ) {
+    try {
+      if( MgnlContext.hasInstance() ) {
+        return unit.exec( MgnlContext.getJCRSession( unit.getWorkspace() ) );
+      } else {
+        return MgnlContext.doInSystemContext( unit, true );
+      }
+    } catch( Exception ex ) {
+      throw toRuntimeRepositoryException(ex);
+    }
+  }
   
 } /* ENDCLASS */
