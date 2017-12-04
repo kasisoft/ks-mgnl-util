@@ -17,17 +17,17 @@ import info.magnolia.cms.security.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JcrExecutionUnit<T> extends JCRSessionOp<T> {
 
-  Supplier<T>         supplier;
-  Consumer<Session>   consumer;
+  Supplier<T>            supplier;
+  Function<Session, T>   function;
   
   @Getter
-  String              workspace;
+  String                 workspace;
   
-  boolean             save;
+  boolean                save;
   
-  public JcrExecutionUnit( @Nonnull String ws, @Nonnull Consumer<Session> con ) {
+  public JcrExecutionUnit( @Nonnull String ws, @Nonnull Function<Session, T> func ) {
     super( ws );
-    consumer  = con;
+    function  = func;
     workspace = ws;
     save      = false;
   }
@@ -50,8 +50,7 @@ public class JcrExecutionUnit<T> extends JCRSessionOp<T> {
       if( supplier != null ) {
         return supplier.get();
       } else {
-        consumer.accept( session );
-        return null;
+        return function.apply( session );
       }
     } finally {
       if( save ) {
