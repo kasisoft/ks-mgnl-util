@@ -123,7 +123,7 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
       } else {
         try {
           if( node.getDepth() > 1 ) {
-            result = getMatchingParent( node.getParent() );
+            result = getMatchingParentImpl( node.getParent() );
           }
         } catch( Exception ex ) {
           throw NodeFunctions.toRuntimeRepositoryException(ex);

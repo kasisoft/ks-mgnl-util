@@ -160,7 +160,7 @@ public class TemplateDeclaration<T extends TemplateDeclaration> implements Predi
         result = node;
       } else {
         try {
-          result = getMatchingParent( node.getParent() );
+          result = getMatchingParentImpl( node.getParent() );
         } catch( Exception ex ) {
           throw NodeFunctions.toRuntimeRepositoryException(ex);
         }
