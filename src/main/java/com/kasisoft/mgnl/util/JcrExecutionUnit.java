@@ -23,28 +23,41 @@ public class JcrExecutionUnit<T> extends JCRSessionOp<T> {
   @Getter
   String              workspace;
   
+  boolean             save;
+  
   public JcrExecutionUnit( @Nonnull String ws, @Nonnull Consumer<Session> con ) {
     super( ws );
     consumer  = con;
     workspace = ws;
+    save      = false;
   }
 
   public JcrExecutionUnit( @Nonnull String ws, @Nonnull Supplier<T> sup ) {
     super( ws );
     supplier  = sup;
     workspace = ws;
+    save      = false;
+  }
+  
+  public JcrExecutionUnit saveAfterExecution() {
+    save = true;
+    return this;
   }
   
   @Override
   public T exec( Session session ) throws RepositoryException {
-    if( supplier != null ) {
-      return supplier.get();
-    } else {
-      consumer.accept( session );
-      return null;
+    try {
+      if( supplier != null ) {
+        return supplier.get();
+      } else {
+        consumer.accept( session );
+        return null;
+      }
+    } finally {
+      if( save ) {
+        session.save();
+      }
     }
   }
-
-  
   
 } /* ENDCLASS */
