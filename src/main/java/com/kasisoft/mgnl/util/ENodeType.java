@@ -1,5 +1,9 @@
 package com.kasisoft.mgnl.util;
 
+import static com.kasisoft.mgnl.util.internal.Messages.*;
+
+import info.magnolia.context.*;
+
 import info.magnolia.jcr.util.*;
 
 import javax.annotation.*;
@@ -21,7 +25,7 @@ import lombok.*;
 @Slf4j
 @ToString(of = "nodetype")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENodeType>>, Comparable<ENodeType> {
+public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENodeType>>, Comparable<ENodeType>, org.apache.jackrabbit.commons.predicate.Predicate {
 
   public static final ENodeType LastModified    = new ENodeType( NodeTypes . LastModified  . NAME );
   public static final ENodeType Activatable     = new ENodeType( NodeTypes . Activatable   . NAME );
@@ -58,11 +62,41 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
     LocalData.values.put( ntName, this );
   }
 
-  public <R> List<R> list( String workspace, Function<Node, R> transform, Consumer<Exception> exceptionHandler ) {
+  public Node getOrCreate( @Nonnull Node parent, String path ) {
+    return NodeFunctions.getOrCreateNode( parent, path + "{" + nodetype + "}" );
+  }
+  
+  public Node getNodeByIdentifier( @Nonnull String workspace, @Nonnull String identifier ) {
+    Node result = null;
+    try {
+      Node node = MgnlContext.getJCRSession( workspace ).getNodeByIdentifier( identifier );
+      if( test( node ) ) {
+        result = node;
+      }
+    } catch( Exception ex ) {
+      log.warn( error_failed_to_access_node_by_id.format( identifier, workspace, ex.getLocalizedMessage() ), ex );
+    }
+    return result;
+  }
+
+  public Node getNodeByPath( @Nonnull String workspace, @Nonnull String path ) {
+    Node result = null;
+    try {
+      Node node = MgnlContext.getJCRSession( workspace ).getNode( path );
+      if( test( node ) ) {
+        result = node;
+      }
+    } catch( Exception ex ) {
+      log.warn( error_failed_to_access_node_by_path.format( path, workspace, ex.getLocalizedMessage() ), ex );
+    }
+    return result;
+  }
+
+  public <R> List<R> list( @Nonnull String workspace, Function<Node, R> transform, Consumer<Exception> exceptionHandler ) {
     return QueryFunctions.xpath.list( workspace, transform, "//element(*, %s)", exceptionHandler, nodetype );
   }
 
-  public <R> List<R> list( String workspace, Function<Node, R> transform ) {
+  public <R> List<R> list( @Nonnull String workspace, Function<Node, R> transform ) {
     return QueryFunctions.xpath.list( workspace, transform, "//element(*, %s)", null, nodetype );
   }
 
@@ -237,6 +271,15 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
       } catch( Exception ex ) {
         log.warn( "The node {} could not be tested if it matches the type {}. Assuming that it's not matching. Cause: {}", node, nodetype, ex.getLocalizedMessage(), ex );
       }
+    }
+    return result;
+  }
+
+  @Override
+  public boolean evaluate( Object object ) {
+    boolean result = false;
+    if( object instanceof Node ) {
+      result = test( (Node) object );
     }
     return result;
   }

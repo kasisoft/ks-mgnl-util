@@ -10,6 +10,12 @@ public class Messages {
   @I18N("the resource '%s' could not be loaded")
   public static I18NFormatter               error_resource_not_found;
   
+  @I18N("could not access node with uuid '%s' in workspace '%s'. cause: %s")
+  public static I18NFormatter               error_failed_to_access_node_by_id;
+
+  @I18N("could not access node using location '%s' in workspace '%s'. cause: %s")
+  public static I18NFormatter               error_failed_to_access_node_by_path;
+
   @I18N("failed to save property '%s' with value '%s'")
   public static I18NFormatter               error_failed_to_save_property;
   
