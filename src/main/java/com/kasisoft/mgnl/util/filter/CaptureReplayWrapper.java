@@ -2,8 +2,6 @@ package com.kasisoft.mgnl.util.filter;
 
 import static com.kasisoft.mgnl.util.internal.Messages.*;
 
-import info.magnolia.context.*;
-
 import javax.servlet.http.*;
 
 import javax.servlet.*;
@@ -246,7 +244,7 @@ public class CaptureReplayWrapper extends HttpServletResponseWrapper {
       if( content != null ) {
         return content.toString();
       } else {
-        log.error( error_accessed_stream.format( MgnlContext.getWebContext().getRequest().getRequestURL() ) );
+        // forward/redirect happened
         return "";
       }
     }
@@ -258,10 +256,12 @@ public class CaptureReplayWrapper extends HttpServletResponseWrapper {
     
     @Override
     public void reset() {
-      getContent().getBuffer().setLength(0);
+      if( out != null ) {
+        getContent().getBuffer().setLength(0);
+      }
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public StringWriter getContent() {
       return (StringWriter) out;
@@ -269,8 +269,10 @@ public class CaptureReplayWrapper extends HttpServletResponseWrapper {
 
     @Override
     public void serve( @Nonnull CaptureReplayWrapper wrapper ) throws IOException {
-      try( PrintWriter writer = wrapper.getSuperWriter() ) {
-        writer.print( getContent().toString() );
+      if( out != null ) {
+        try( PrintWriter writer = wrapper.getSuperWriter() ) {
+          writer.print( getContent().toString() );
+        }
       }
     }
 
