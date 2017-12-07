@@ -133,6 +133,24 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
     return result;
   }
 
+  @Nullable
+  public Node getFirstChild( @Nullable Node parent ) {
+    Node result = null;
+    if( parent != null ) {
+      result = NodeFunctions.getFirstChild( parent );
+    }
+    return result;
+  }
+
+  @Nullable
+  public Node getLastChild( @Nullable Node parent ) {
+    Node result = null;
+    if( parent != null ) {
+      result = NodeFunctions.getFirstChild( parent );
+    }
+    return result;
+  }
+
   @Nonnull
   public List<Node> getChildren( @Nullable Node parent ) {
     List<Node> result = Collections.emptyList();

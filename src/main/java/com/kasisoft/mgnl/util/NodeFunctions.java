@@ -102,7 +102,7 @@ public class NodeFunctions {
   public static List<Node> getChildNodes( @Nonnull Node parent, @Nullable Predicate<Node> test ) {
     return getChildNodes( parent, test, null );
   }
-  
+
   @Nonnull
   public static <R> List<R> getChildNodes( @Nonnull Node parent, @Nullable Predicate<Node> test, @Nullable Function<Node, R> transform ) {
     if( test == null ) {
@@ -118,6 +118,60 @@ public class NodeFunctions {
         Node nextNode = iterator.nextNode();
         if( test.test( nextNode ) ) {
           result.add( transform.apply( nextNode ) );
+        }
+      }
+    } catch( Exception ex ) {
+      throw toRuntimeRepositoryException(ex);
+    }
+    return result;
+  }
+
+  @Nullable
+  public static Node getLastChild( @Nonnull Node parent ) {
+    return getLastChild( parent, null, null );
+  }
+  
+  @Nullable
+  public static Node getLastChild( @Nonnull Node parent, @Nullable Predicate<Node> test ) {
+    return getLastChild( parent, test, null );
+  }
+
+  @Nonnull
+  public static <R> R getLastChild( @Nonnull Node parent, @Nullable Predicate<Node> test, @Nullable Function<Node, R> transform ) {
+    return getSpecificChild( parent, test, transform, true );
+  }
+
+  @Nullable
+  public static Node getFirstChild( @Nonnull Node parent ) {
+    return getFirstChild( parent, null, null );
+  }
+  
+  @Nullable
+  public static Node getFirstChild( @Nonnull Node parent, @Nullable Predicate<Node> test ) {
+    return getFirstChild( parent, test, null );
+  }
+
+  @Nonnull
+  public static <R> R getFirstChild( @Nonnull Node parent, @Nullable Predicate<Node> test, @Nullable Function<Node, R> transform ) {
+    return getSpecificChild( parent, test, transform, false );
+  }
+
+  @Nonnull
+  private static <R> R getSpecificChild( @Nonnull Node parent, @Nullable Predicate<Node> test, @Nullable Function<Node, R> transform, boolean last ) {
+    if( test == null ) {
+      test = Predicates.acceptAll();
+    }
+    if( transform == null ) {
+      transform = (Function<Node, R>) Function.<Node>identity();
+    }
+    Predicate<R> docontinue = $ -> (last ? true : $ == null);
+    R            result     = null;
+    try {
+      NodeIterator iterator = parent.getNodes();
+      while( docontinue.test( result ) && iterator.hasNext() ) {
+        Node nextNode = iterator.nextNode();
+        if( test.test( nextNode ) ) {
+          result = transform.apply( nextNode );
         }
       }
     } catch( Exception ex ) {
