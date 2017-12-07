@@ -4,6 +4,10 @@ import static com.kasisoft.mgnl.util.internal.Messages.*;
 
 import info.magnolia.jcr.util.*;
 
+import com.kasisoft.libs.common.xml.adapters.*;
+
+import com.kasisoft.libs.common.function.*;
+
 import javax.annotation.*;
 import javax.jcr.*;
 
@@ -18,6 +22,11 @@ import lombok.extern.slf4j.*;
  */
 @Slf4j
 public class PropertySavers {
+
+  public static <E extends Enum<E>> TriConsumer<Node, String, E> createSaveEnum( @Nonnull Class<E> enumType ) {
+    EnumerationAdapter<E> adapter = new EnumerationAdapter<>( enumType );
+    return ($n, $p, $v) -> saveString( $n, $p, adapter.marshal($v) );
+  }
 
   public static void saveDate( @Nonnull Node jcr, @Nonnull String propertyName, Date value ) {
     Calendar calendar = null;

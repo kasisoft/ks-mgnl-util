@@ -6,6 +6,8 @@ import com.kasisoft.libs.common.text.*;
 
 import com.kasisoft.libs.common.util.*;
 
+import com.kasisoft.libs.common.xml.adapters.*;
+
 import javax.annotation.*;
 import javax.jcr.*;
 
@@ -20,6 +22,11 @@ import java.util.*;
  */
 public class PropertyLoaders {
 
+  public static <E extends Enum<E>> BiFunction<Node, String, E> createToEnum( @Nonnull Class<E> enumType ) {
+    EnumerationAdapter<E> adapter = new EnumerationAdapter<>( enumType );
+    return ($n, $p) -> adapter.unmarshal( toString( $n, $p ) );
+  }
+  
   public static Date toDate( Node jcr, @Nonnull String propertyName, Date defVal ) {
     Calendar calendar = toCalendar( jcr, propertyName );
     Date     result   = defVal;
