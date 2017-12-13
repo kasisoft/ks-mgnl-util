@@ -347,16 +347,8 @@ public class NodeFunctions {
     if( result == null ) {
       // determine the node type depending on the nodes position (assuming config like workspace)
       result = ENodeType.ContentNode.getNodeType();
-      if( parent.getDepth() == 0 ) {
+      if( (parent.getDepth() == 0) || (parent.getDepth() == 1) ) {
         result = ENodeType.Content.getNodeType();
-      } else if( parent.getDepth() == 1 ) {
-        if( "modules".equals( name ) ) {
-          result = ENodeType.Content.getNodeType();
-        }
-      } else if( parent.getDepth() == 2 ) {
-        if( "config".equals( name ) ) {
-          result = ENodeType.Content.getNodeType();
-        }
       }
     }
     return result;
