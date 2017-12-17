@@ -511,5 +511,17 @@ public class NodeFunctions {
       throw toRuntimeRepositoryException(ex);
     }
   }
-  
+
+  public static <R> void forContextDo( JcrExecutionOp<R> unit ) {
+    try {
+      if( MgnlContext.hasInstance() ) {
+        unit.exec( MgnlContext.getJCRSession( unit.getWorkspace() ) );
+      } else {
+        MgnlContext.doInSystemContext( unit, true );
+      }
+    } catch( Exception ex ) {
+      throw toRuntimeRepositoryException(ex);
+    }
+  }
+
 } /* ENDCLASS */

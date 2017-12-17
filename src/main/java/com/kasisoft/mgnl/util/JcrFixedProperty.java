@@ -4,8 +4,6 @@ import static com.kasisoft.mgnl.util.internal.Messages.*;
 
 import info.magnolia.repository.*;
 
-import info.magnolia.context.*;
-
 import com.kasisoft.libs.common.function.*;
 
 import javax.annotation.*;
@@ -50,10 +48,9 @@ public class JcrFixedProperty<T> {
   }
 
   @Nullable
-  private Node findNode() {
+  private Node findNode( Session session ) {
     try {
-      Session session  = MgnlContext.getJCRSession( workspace );
-      Node    rootnode = session.getRootNode();
+      Node rootnode = session.getRootNode();
       if( rootnode.hasNode( path ) ) {
         return rootnode.getNode( path );
       } else {
@@ -65,8 +62,8 @@ public class JcrFixedProperty<T> {
     }
   }
   
-  public T getValue() {
-    Node node   = findNode();
+  private T getValueImpl( Session session ) {
+    Node node   = findNode( session );
     T    result = null;
     if( node != null ) {
       result = jcrProperty.getValue( node );
@@ -79,13 +76,21 @@ public class JcrFixedProperty<T> {
     return result;
   }
   
-  public void setValue( T value ) {
-    Node node = findNode();
+  private void setValueImpl( Session session, T value ) {
+    Node node = findNode( session );
     if( node != null ) {
       jcrProperty.setValue( node, value );
     } else {
       log.warn( error_missing_node.format( path, workspace ) );
     }
+  }
+  
+  public T getValue() {
+    return NodeFunctions.forContext( new JcrExecutionUnit<T>( workspace, this::getValueImpl ) );
+  }
+  
+  public void setValue( T value ) {
+    NodeFunctions.forContextDo( new JcrExecutionOp<T>( workspace, this::setValueImpl, value ) );
   }
   
   public boolean hasValue( T val ) {
