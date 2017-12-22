@@ -23,6 +23,11 @@ public final class PageDeclaration extends TemplateDeclaration<PageDeclaration> 
     super( LocalData.byId, LocalData.byName, templateName, templateId, ENodeType.Page.getNodeType(), renderer, subIds );
   }
   
+  @Override
+  public String getMgnlType() {
+    return "mgnl:page";
+  }
+
   public static PageDeclaration[] values() {
     return LocalData.byId.values().toArray( new PageDeclaration[ LocalData.byId.size() ] );
   }

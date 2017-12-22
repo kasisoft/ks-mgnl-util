@@ -28,7 +28,7 @@ import lombok.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = "id")
 @Slf4j
-public class TemplateDeclaration<T extends TemplateDeclaration> implements Predicate<Node> {
+public abstract class TemplateDeclaration<T extends TemplateDeclaration> implements Predicate<Node> {
 
   // a speaking name
   @Getter String        name;
@@ -104,7 +104,7 @@ public class TemplateDeclaration<T extends TemplateDeclaration> implements Predi
    */
   @Nonnull
   public List<Node> getNodes( @Nonnull Node parent, @Nonnull Consumer<Exception> handler ) {
-    String query = "/jcr:root/%s//element(*,mgnl:page)[@mgnl:template='%s']";
+    String query = "/jcr:root/%s//element(*," + getMgnlType() + ")[@mgnl:template='%s']";
     try {
       String basepath = StringUtils.removeEnd( StringUtils.removeStart( parent.getPath(), "/" ), "/" );
       return xpath.list( RepositoryConstants.WEBSITE, query, handler, basepath, id );
@@ -113,6 +113,8 @@ public class TemplateDeclaration<T extends TemplateDeclaration> implements Predi
       return Collections.emptyList();
     }
   }
+  
+  abstract String getMgnlType();
 
   /**
    * Returns all components within the website workspace. Errors will be logged. 

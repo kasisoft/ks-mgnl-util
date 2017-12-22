@@ -23,6 +23,11 @@ public final class ComponentDeclaration extends TemplateDeclaration<ComponentDec
     super( LocalData.byId, LocalData.byName, templateName, templateId, ENodeType.Component.getNodeType(), renderer, subIds );
   }
   
+  @Override
+  public String getMgnlType() {
+    return "mgnl:component";
+  }
+  
   public static ComponentDeclaration[] values() {
     return LocalData.byId.values().toArray( new ComponentDeclaration[ LocalData.byId.size() ] );
   }
@@ -46,7 +51,7 @@ public final class ComponentDeclaration extends TemplateDeclaration<ComponentDec
     }
     return result;
   }
-
+  
   private static class LocalData {
   
     private static Map<String, ComponentDeclaration>   byId    = new HashMap<>();
