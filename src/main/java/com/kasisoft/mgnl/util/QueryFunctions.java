@@ -15,6 +15,8 @@ import java.util.function.*;
 
 import java.util.stream.*;
 
+import java.util.regex.*;
+
 import java.util.*;
 
 import lombok.extern.slf4j.*;
@@ -40,11 +42,17 @@ public enum QueryFunctions {
   sql2  ( Query.JCR_SQL2 ), 
   xpath ( Query.XPATH    );
 
+  private static final Pattern INVALID_XPATH = Pattern.compile( "(^[0-9]|[/][0-9])" );
+  
   @Getter
   String   language;
 
   QueryFunctions( String lang ) {
     language = lang;
+  }
+  
+  public static boolean isInvalidXpath( String value ) {
+    return INVALID_XPATH.matcher( value ).find();
   }
 
   public static void loggingErrorHandler( Exception ex ) {
