@@ -5,9 +5,9 @@ import static com.kasisoft.mgnl.util.internal.Messages.*;
 
 import info.magnolia.repository.*;
 
-import com.kasisoft.mgnl.util.*;
+import info.magnolia.jcr.util.*;
 
-import org.apache.commons.lang3.*;
+import com.kasisoft.mgnl.util.*;
 
 import javax.annotation.*;
 import javax.jcr.*;
@@ -46,6 +46,8 @@ public abstract class TemplateDeclaration<T extends TemplateDeclaration> impleme
   
   String                str;
   
+  org.apache.jackrabbit.commons.predicate.Predicate predicate;
+  
   TemplateDeclaration( @Nonnull Map<String, T> byId, @Nonnull Map<String, T> byName, @Nonnull String templateName, @Nonnull String templateId, @Nonnull String nodetype, boolean renderer, String ... subIds ) {
     name          = templateName;
     id            = templateId;
@@ -57,6 +59,19 @@ public abstract class TemplateDeclaration<T extends TemplateDeclaration> impleme
     duplicateCheck( byName , name , name, id );
     byId   . put( id   , (T) this );
     byName . put( name , (T) this );
+    predicate     = new org.apache.jackrabbit.commons.predicate.Predicate() {
+
+      @Override
+      public boolean evaluate( Object object ) {
+        boolean result = false;
+        if( object instanceof Node ) {
+          Node node = (Node) object;
+          result = test( node ) && getMgnlType().test( node );
+        }
+        return result;
+      }
+      
+    };
   }
   
   private void duplicateCheck( Map<String, T> map, String candidate, String name, String id ) {
@@ -104,17 +119,15 @@ public abstract class TemplateDeclaration<T extends TemplateDeclaration> impleme
    */
   @Nonnull
   public List<Node> getNodes( @Nonnull Node parent, @Nonnull Consumer<Exception> handler ) {
-    String query = "/jcr:root/%s//element(*," + getMgnlType() + ")[@mgnl:template='%s']";
     try {
-      String basepath = StringUtils.removeEnd( StringUtils.removeStart( parent.getPath(), "/" ), "/" );
-      return xpath.list( RepositoryConstants.WEBSITE, query, handler, basepath, id );
+      return NodeUtil.asList( NodeUtil.collectAllChildren( parent, predicate ) );
     } catch( Exception ex ) {
       handler.accept( ex );
       return Collections.emptyList();
     }
   }
   
-  abstract String getMgnlType();
+  abstract ENodeType getMgnlType();
 
   /**
    * Returns all components within the website workspace. Errors will be logged. 

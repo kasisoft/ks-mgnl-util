@@ -24,8 +24,8 @@ public final class PageDeclaration extends TemplateDeclaration<PageDeclaration> 
   }
   
   @Override
-  public String getMgnlType() {
-    return "mgnl:page";
+  public ENodeType getMgnlType() {
+    return ENodeType.Page;
   }
 
   public static PageDeclaration[] values() {

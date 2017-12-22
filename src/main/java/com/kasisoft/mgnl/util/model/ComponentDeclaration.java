@@ -24,8 +24,8 @@ public final class ComponentDeclaration extends TemplateDeclaration<ComponentDec
   }
   
   @Override
-  public String getMgnlType() {
-    return "mgnl:component";
+  public ENodeType getMgnlType() {
+    return ENodeType.Component;
   }
   
   public static ComponentDeclaration[] values() {
