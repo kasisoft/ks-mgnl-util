@@ -104,16 +104,27 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
     boolean result = false;
     if( child != null ) {
       try {
-        result = isAllowedChild( child.getPrimaryNodeType().getName() );
-      } catch( RepositoryException ex ) {
+        result = allowedChildren.stream().map( $ -> isNodeType( child, $ ) ).reduce( false, ($1, $2) -> $1 || $2 );
+      } catch( Exception ex ) {
         // this child is being rejected due to an error
-        log.error( ex.getLocalizedMessage(), ex );
+        log.warn( ex.getLocalizedMessage(), ex );
       }
     }
     return result;
   }
+  
+  private boolean isNodeType( Node child, String nt ) {
+    try {
+      return child.isNodeType(nt);
+    } catch( Exception ex ) {
+      // this child is being rejected due to an error
+      log.warn( ex.getLocalizedMessage(), ex );
+      return false;
+    }
+  }
+  
 
-  public boolean isAllowedChild( @Nullable  ENodeType child ) {
+  public boolean isAllowedChild( @Nullable ENodeType child ) {
     if( child != null ) {
       return isAllowedChild( child.getNodeType() );
     } else {
@@ -185,11 +196,25 @@ public class ENodeType implements Predicate<Node>, Function<Node, Optional<ENode
     return result;
   }
 
+  @Deprecated
   @Nonnull
   public List<Node> getChildren( @Nullable Node parent ) {
+    return getChildrenOfThisType( parent );
+  }
+  
+  @Nonnull
+  public List<Node> getChildrenOfThisType( @Nullable Node parent ) {
     List<Node> result = Collections.emptyList();
     if( parent != null ) {
       result = NodeFunctions.getChildNodes( parent, this );
+    }
+    return result;
+  }
+  
+  public List<Node> getAllowedChildren( @Nullable Node parent ) {
+    List<Node> result = Collections.emptyList();
+    if( test( parent ) ) {
+      result = NodeFunctions.getChildNodes( parent, this::isAllowedChild );
     }
     return result;
   }
