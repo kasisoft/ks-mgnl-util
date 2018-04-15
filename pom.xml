@@ -17,7 +17,7 @@
   <version>0.8-SNAPSHOT</version>
 
   <name>MGNL :: Util</name>
-  <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/com.kasisoft.mgnl.util</url>
+  <url>https://github.com/costamojan/ks-mgnl-util.git</url>
   <description>General purpose library providing various helper functions</description>
   
   <licenses>
@@ -33,9 +33,9 @@
   </organization>
   
   <scm>
-    <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/com.kasisoft.mgnl.util</url>
-    <connection>scm:git:ssh://kasisoft.com:7999/mgnl/com.kasisoft.mgnl.util.git</connection>
-    <developerConnection>scm:git:ssh://kasisoft.com:7999/mgnl/com.kasisoft.mgnl.util.git</developerConnection>
+    <url>https://github.com/costamojan/ks-mgnl-util.git</url>
+    <connection>scm:git@github.com:costamojan/ks-mgnl-util.git</connection>
+    <developerConnection>scm:git@github.com:costamojan/ks-mgnl-util.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
   
