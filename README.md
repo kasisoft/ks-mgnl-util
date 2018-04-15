@@ -32,7 +32,7 @@ I assume that you're familiar with Maven. If not I suggest to visit the followin
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
          <artifactId>ks-mgnl-util</artifactId>
-         <version>0.8</version>
+         <version>0.9</version>
      </dependency>
 
 
@@ -43,7 +43,7 @@ Snapshots can be used while accessing a dedicated maven repository. Your POM nee
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
          <artifactId>ks-mgnl-util</artifactId>
-         <version>0.9-SNAPSHOT</version>
+         <version>1.0-SNAPSHOT</version>
      </dependency>
      
      <repositories>
