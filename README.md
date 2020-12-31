@@ -6,10 +6,9 @@ This library provides a collection of useful helpers to deal with JCR/Magnolia r
 
 # Infos
 
-* [eMail: daniel.kasmeroglu@kasisoft.net](mailto:daniel.kasmeroglu@kasisoft.net)
-* [Jira](https://kasisoft.com/jira/projects/MGNLUTIL)
-* [Jenkins](https://kasisoft.com/jenkins/job/mgnl.ks-mgnl-util)
-* [GIT](https://kasisoft.com/bitbucket/projects/MGNL/repos/ks-mgnl-util)
+* [eMail: daniel.kasmeroglu@kasisoft.com](mailto:daniel.kasmeroglu@kasisoft.com)
+* [Issues](https://github.com/kasisoft/ks-mgnl-util/issues)
+* [GIT](https://github.com/kasisoft/ks-mgnl-util)
 
 
 # Development Setup
